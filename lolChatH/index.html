@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>LolChatt</title>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300, 400, 500" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+	<h1>LolChatt</h1>
+	<div class="display-auth">
+		<section class="userClass">
+			<div class="user_options-container">
+				<div class="user_options-text">
+					<div class="user_options-unregistered">
+						<h2 class="user_unregistered-title">Don't have an account?</h2>
+						<p class="user_unregistered-text">LolChatt registration.
+							Fill the form to registeration on the site.</p>
+						<button class="user_unregistered-signup" id="signup-button">Sign up</button>
+					</div>
+
+					<div class="user_options-registered">
+						<h2 class="user_registered-title">Have an account?</h2>
+						<p class="user_registered-text">LolChatt login.
+							Enter you registration data.</p>
+						<button class="user_registered-login" id="login-button">Login</button>
+					</div>
+				</div>
+
+				<div class="user_options-forms" id="user_options-forms">
+					<div class="user_forms-login">
+						<h2 class="forms_title">Login</h2>
+						<form class="forms_form login-form">
+							<fieldset class="forms_fieldset">
+								<div class="forms_field">
+									<input type="email" placeholder="Email" class="forms_field-input l-email" required
+										autofocus />
+								</div>
+								<div class="forms_field">
+									<input type="password" placeholder="Password" class="forms_field-input l-password"
+										required />
+								</div>
+							</fieldset>
+							<div class="forms_buttons">
+								<input type="submit" value="Log In" class="forms_buttons-action">
+							</div>
+						</form>
+						<p class="valid-p">Check your login or password</p>
+					</div>
+					<div class="user_forms-signup">
+						<h2 class="forms_title">Sign Up</h2>
+						<form class="forms_form register-form">
+							<fieldset class="forms_fieldset">
+								<div class="forms_field">
+									<input name="nickname" type="text" placeholder="Nick Name"
+										class="forms_field-input r-username" required maxlength="20" />
+								</div>
+								<div class="forms_field">
+									<input type="email" placeholder="Email" class="forms_field-input email" required
+										pattern="^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$" />
+								</div>
+								<div class="forms_field">
+									<input name="password" type="password" placeholder="Password"
+										class="forms_field-input r-password" required minlength="8" />
+								</div>
+							</fieldset>
+							<div class="forms_buttons">
+								<input type="submit" value="Sign up" class="forms_buttons-action">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<div class="chatBodi">
+		<bottom class="out">Out</bottom>
+		<div id="topBtn"><img class="UpImg" src="images/up.svg" alt="up" /></div>
+		<div class="comment-list" id="comment-list"></div>
+		<div class="foot">
+			<form class="js-comments-form form-group">
+
+				<div class="mess">
+					<textarea autofocus class="text" name="comment" rows="3" placeholder="Comment"></textarea>
+				</div>
+
+				<div class="addMess">
+					<button class="addMess-btn" type="submit"><img src="images/svg.svg" alt="Add" /></button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+</body>
+<script src="srcJs/login.js"></script>
+<script src="srcJs/api.js"></script>
+<script src="srcJs/index.js"></script>
+
+</html>

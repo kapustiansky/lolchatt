@@ -1,0 +1,25 @@
+{
+  "name": "chat",
+  "version": "0.3.0",
+  "description": "Simple demo chat based on JSON-server and long-polling",
+  "main": "server.js",
+  "dependencies": {
+    "json-server": "^0.15.0"
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/lolchatt.git"
+  },
+  "keywords": [
+    "chat",
+    "heroku",
+    "json-server"
+  ],
+  "author": "Oleg",
+  "license": "ISC"
+}
