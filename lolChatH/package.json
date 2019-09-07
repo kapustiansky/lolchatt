@@ -1,25 +1,24 @@
 {
-  "name": "chat",
-  "version": "0.3.0",
-  "description": "Simple demo chat based on JSON-server and long-polling",
-  "main": "server.js",
+  "name": "lolchatt",
+  "version": "0.0.1",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "author": "Kapustiansky",
+  "license": "ISC",
   "dependencies": {
-    "json-server": "^0.15.0"
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.3.2",
+    "mongoose": "^5.6.11",
+    "validator": "^11.1.0"
   },
   "devDependencies": {
+    "env-cmd": "^9.0.3",
+    "nodemon": "^1.19.1"
   },
-  "scripts": {
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://git.heroku.com/lolchatt.git"
-  },
-  "keywords": [
-    "chat",
-    "heroku",
-    "json-server"
-  ],
-  "author": "Oleg",
-  "license": "ISC"
+  "keywords": [],
+  "description": ""
 }

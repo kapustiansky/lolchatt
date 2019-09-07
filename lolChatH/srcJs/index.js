@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-
+   
     //Первичная проверка
 
     firstSetup();
@@ -8,17 +8,20 @@
     function firstSetup() {
 
         if (localStorage.getItem('_user')) {
+            //getLenqth();
+            //itemsReload();
             showChatBody();
-            getLenqth();
             refreshPage();
         } else {
             showAuthForm();
+            //test
+            //history.pushState(null, null, '/login');
+            //let stateObj = { foo: "login" };
+	        //history.pushState(stateObj, "page 2", "login");
         }
     }
 
     //Группа входа
-
-    let user = JSON.parse(localStorage.getItem('_user')) || null;
 
     let signInform = document.querySelector('.login-form');
     let signUpform = document.querySelector('.register-form');
@@ -26,16 +29,32 @@
     function signUp() {
 
         let data = {
-            username: signUpform.querySelector('.r-username').value,
+            name: signUpform.querySelector('.r-username').value,
             email: signUpform.querySelector('.email').value,
             password: signUpform.querySelector('.r-password').value
         };
 
-        api.post('https://lolchatt.herokuapp.com/users', data, user => {
-            signUpform.reset();
-            data = null;
-            localStorage.setItem('_user', JSON.stringify(user));
-        });
+        return fetch('https://lolchatt.herokuapp.com/registration',  {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then( response => {
+            if( response.status !== 201) {
+                console.log(response.status);
+                //alert('error');
+            } else {
+                document.getElementById('login-button').click();
+                //test
+                //history.pushState(null, null, '/login');
+                //let stateObj = { foo: "login" };
+	            //history.pushState(stateObj, "page 2", "login");
+            }
+        })           
+        
     }
 
     function signIn() {
@@ -45,26 +64,49 @@
             password: signInform.querySelector('.l-password').value
         };
 
-        api.get(`https://lolchatt.herokuapp.com/users?email=${data.email}&password=${data.password}`, response => {
-
-            if (!response.length) {
-                showAuthForm();
-                shovSubError();
-            } else {
-                user = response[0];
+        return fetch('https://lolchatt.herokuapp.com/login',  {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then( response => {
+            if (response.status == 200) {
+                //getLenqth();
+                //itemsReload();
+                refreshPage();
+                showChatBody();
+                
                 signInform.reset();
                 data = null;
-                localStorage.setItem('_user', JSON.stringify(user));
-                showChatBody();
-                refreshPage();
-            }
-        });
+                
+                let userData = response.json();
+                userData.then( function (data) {
+
+                    let userSave = {
+                        userName: data.user.name,
+                        userId: data.user._id,
+                        token: data.token
+                    }
+
+                    localStorage.setItem('_user', JSON.stringify(userSave))
+                 })
+                .then(location.reload())
+                
+                         
+            } else {
+                    console.log(response.status)
+                    showAuthForm();
+                    shovSubError();
+              }
+        })
     }
 
     signUpform.onsubmit = event => {
         event.preventDefault();
         signUp();
-        document.getElementById('login-button').click();
     }
 
     signInform.onsubmit = event => {
@@ -73,14 +115,16 @@
     }
 
     //Пост на сервер
+    
 
     document.querySelectorAll('.js-comments-form').forEach(commentForm => {
         commentForm.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            let getUserData = JSON.parse(localStorage.getItem('_user'));
-            this.userId = getUserData.id;
-            this.userName = getUserData.username;
+            //let getUserData = JSON.parse(localStorage.getItem('_user'));
+            this.userId = locStor.userId;
+            this.userName = locStor.userName;
+
 
             let today = new Date();
             let dd = String(today.getDate()).padStart(2, '0');
@@ -99,7 +143,8 @@
                     user_Id: this.userId
                 })
                 .then(() => commentForm.reset())
-                .then(getLenqth)
+                .then(//getLenqth()
+                itemsReload())
         })
     });
 
@@ -116,7 +161,7 @@
 
     //Отрисовка с сервера
 
-    var namb = 20;
+    //var namb = 20;
 
     window.oldScrollY = window.scrollY;
     document.onscroll = event => {
@@ -124,8 +169,8 @@
         window.oldScrollY = window.scrollY;
 
         if (res == 2 && window.scrollY > 1000) {
-            namb++;
-            getLenqth();
+            //namb++;
+            //getLenqth();
             document.getElementById('topBtn').style.display = 'block';
         } else document.getElementById('topBtn').style.display = 'none';
     }
@@ -137,24 +182,31 @@
         });
     }
 
-    function getLenqth() {
-        return fetch('https://lolchatt.herokuapp.com/comments')
-            .then(response => response.json())
-            .then(data => {
+    // function getLenqth() {
+    //     return fetch('http://localhost:3000/comments')
+    //        // .then(history.pushState(null, null, '/comments'))
+    //         .then(response => response.json())
+    //         .then(data => {
 
-                let startMess = data.length - namb;
-                let limit = data.length;
+    //             let startMess = data.length - namb;
+    //             let limit = data.length;
 
-                if (startMess < 0) {
-                    startMess = 0;
-                }
+    //             if (startMess < 0) {
+    //                 startMess = 0;
+    //             }
 
-                itemsReload(startMess, limit);
-            });
-    }
+    //             itemsReload(startMess,limit);
+    //         });
+    // }
 
-    function itemsReload(lastPage, limitNam) {
-        return fetch(`https://lolchatt.herokuapp.com/comments?_start=${lastPage}&_limit=${limitNam}`)
+    // function itemsReload(lastPage, limitNam) {
+    //     return fetch(`http://localhost:3000/comments?_start=${lastPage}&_limit=${limitNam}`)
+    //         .then(response => response.json())
+    //         .then(render);
+    // }
+
+    function itemsReload() {
+        return fetch(`https://lolchatt.herokuapp.com/comments`)
             .then(response => response.json())
             .then(render);
     }
@@ -163,24 +215,38 @@
 
     function render(items) {
         commentList.innerHTML = '';
+        //console.log(items);
 
         items.forEach(com => {
 
-            let regex = /^(ftp|http|https):\/\/[^ "]+$/;
+            let regexImg = /image/;
+            let regexHref = /^(ftp|http|https):\/\/[^ "]+$/;
 
-            if (regex.test(com.body)) { commentList.insertAdjacentHTML('afterbegin', `
+            if (regexHref.test(com.body)) { commentList.insertAdjacentHTML('afterbegin', `
                     <div class="toast-container">
                     <div class="toast">
                         <div class="toast-header">       
                         <div class="autor">${com.username}</div>        
                         <div class="date">${com.date}</div>
                         <div class="closeBtn">
-                            <span class="spnDel" id="${com.id}">X</span>
+                        <span class="spnDel${com.user_Id}" id="${com._id}">X</span>
                         </div>
                         </div>
-                        <div class="toast-body"><a href="${com.body}" target="_blank">${com.body}</a>
-                        
+                        <div class="toast-body"><a href="${com.body}" target="_blank">${com.body}</a></div>
+                    </div>
+                    </div>
+                    `);
+            } else if (regexImg.test(com.body)) { commentList.insertAdjacentHTML('afterbegin', `
+                <div class="toast-container">
+                    <div class="toast">
+                        <div class="toast-header">       
+                        <div class="autor">${com.username}</div>        
+                        <div class="date">${com.date}</div>
+                        <div class="closeBtn">
+                        <span class="spnDel${com.user_Id}" id="${com._id}">X</span>
                         </div>
+                        </div>
+                        <div class="toast-body"><img src="${com.body}" height="150" width="125"/></div>
                     </div>
                     </div>
                     `);
@@ -191,7 +257,7 @@
                         <div class="autor">${com.username}</div>        
                         <div class="date">${com.date}</div>
                         <div class="closeBtn">
-                            <span class="spnDel" id="${com.id}">X</span>
+                        <span class="spnDel${com.user_Id}" id="${com._id}">X</span>
                         </div>
                         </div>
                         <div class="toast-body">
@@ -201,14 +267,24 @@
                     </div>
                     `);
             }
+            
         });
+        spanNone();
     }
+
+    function spanNone() {
+        //let user = JSON.parse(localStorage.getItem('_user'));
+        document.querySelectorAll(`.spnDel${locStor.userId}`).forEach(span => {
+            span.style.display = 'block';
+           });
+    }
+    
 
     //удаление на странице
 
     function delCom() {
         document.querySelector('.comment-list').addEventListener('click', event => {
-            if (event.target.matches('span.spnDel')) {
+            if (event.target.matches('span[class*="spnDel"]')) {
                 event.target.closest('div.toast-container').remove();
 
                 let id = event.target.getAttribute('id');
@@ -216,7 +292,6 @@
                 // method: 'DELETE',
                 // })
                 itemsDelite(id);
-                //getLenqth();
             }
         });
     }
@@ -233,11 +308,15 @@
     //выход с аккаунта
 
     document.querySelector('.out').onclick = event => {
-        logOut();
+        return fetch('https://lolchatt.herokuapp.com/users/me/logout', {
+            method: 'POST',
+            headers: {
+                Authorization: `${locStor.token}`}
+        })
+        .then(logOut())  
     }
 
     function logOut() {
-        user = null;
         localStorage.removeItem('_user');
         showAuthForm();
         stop();
@@ -259,9 +338,10 @@
 
     function refreshPage() {
         reloadPage = setTimeout(function tick() {
-            getLenqth();
+            //getLenqth();
+            itemsReload();
             reloadPage = setTimeout(tick, 6000);
-        }, 4);
+        }, 0);
     }
 
     function stop() {
@@ -278,5 +358,111 @@
         }
         setTimeout(clear, 8000);
     }
+
+
+    //dd test 0.1
+
+    
+    var state = 0;
+
+    document.querySelector('.add-files').addEventListener('click', function(event) {
+
+        if (state == 0) {
+        document.querySelector('.text').style.display = 'none';
+        document.querySelector('.upload-container').style.display = 'block';
+        state = 1; } else {
+            document.querySelector('.text').style.display = 'block';
+            document.querySelector('.upload-container').style.display = 'none';
+            state = 0;
+        }
+        
+       // return;
+    });
+
+	var dropZone = $('.upload-container');
+
+	dropZone.on('drag dragstart dragend dragover dragenter dragleave drop', function () {
+		return false;
+	});
+
+	dropZone.on('dragover dragenter', function () {
+		dropZone.addClass('dragover');
+	});
+
+	dropZone.on('dragleave', function (e) {
+		let dx = e.pageX - dropZone.offset().left;
+		let dy = e.pageY - dropZone.offset().top;
+		if ((dx < 0) || (dx > dropZone.width()) || (dy < 0) || (dy > dropZone.height())) {
+			dropZone.removeClass('dragover');
+		}
+	});
+
+	dropZone.on('drop', function (e) {
+		dropZone.removeClass('dragover');
+		let files = e.originalEvent.dataTransfer.files;
+		sendFiles(files);
+	});
+
+	$('#file-input').change(function () {
+		let files = this.files;
+		sendFiles(files);
+	});
+
+	function sendFiles(files) {
+		let maxFileSize = 5242880;
+		let reader = new FileReader();
+		$(files).each(function (index, file) {
+			if ((file.size <= maxFileSize) && ((file.type == 'image/png') || (file.type == 'image/jpeg'))) {
+
+				reader.onload = function (event) {
+
+
+					 var data = event.target.result;
+					 this.data = data;
+
+
+                     let getUserData = JSON.parse(localStorage.getItem('_user'));
+                     this.userId = getUserData.userId;
+         
+                     this.userName = getUserData.userName;
+		
+					let today = new Date();
+					let dd = String(today.getDate()).padStart(2, '0');
+					let mm = String(today.getMonth() + 1).padStart(2, '0');
+					let yyyy = today.getFullYear();
+					let h = today.getHours();
+					let min = ('0' + today.getMinutes()).slice(-2);
+		
+					today = `${dd}/${mm}/${yyyy}  ${h}:${min}`;
+					this.today = today;
+		
+					add({
+							date: this.today,
+							body: this.data,
+                            username: this.userName,
+                            user_Id: this.userId
+						});
+
+					function add(data) {
+						return fetch('https://lolchatt.herokuapp.com/comments', {
+							method: 'POST',
+							body: JSON.stringify(data),
+							headers: {
+								'Accept': 'application/json',
+								'Content-Type': 'application/json',
+							},
+						});
+					}
+                    //getLenqth();
+                    itemsReload();
+                    document.querySelector('.add-files').click();
+				}
+			}
+			reader.readAsDataURL(file);
+		});
+
+    }
+
+    let locStor = JSON.parse(localStorage.getItem('_user'));
     
 })();

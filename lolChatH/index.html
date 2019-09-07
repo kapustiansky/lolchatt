@@ -6,10 +6,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>LolChatt</title>
+	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300, 400, 500" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/dd.css">
+
 </head>
 
 <body>
@@ -82,6 +85,7 @@
 
 	<div class="chatBodi">
 		<bottom class="out">Out</bottom>
+		<a href="pages/me.html" class="me">me</a>
 		<div id="topBtn"><img class="UpImg" src="images/up.svg" alt="up" /></div>
 		<div class="comment-list" id="comment-list"></div>
 		<div class="foot">
@@ -89,10 +93,21 @@
 
 				<div class="mess">
 					<textarea autofocus class="text" name="comment" rows="3" placeholder="Comment"></textarea>
+					<div class="upload-container">
+						<img class="upload-image" src="images/upload.svg">
+						<div class="upload-div">
+							<input id="file-input" type="file" name="file" multiple>
+							<label class="upload-label" for="file-input">Select file</label>
+							<span class="span-dd">&nbsp or drag it here</span>
+						</div>
+					</div>
 				</div>
 
-				<div class="addMess">
-					<button class="addMess-btn" type="submit"><img src="images/svg.svg" alt="Add" /></button>
+				<div class="add-container">
+					<div class="add-files"><img class="files-btn" src="images/sk.svg" alt="files" type="bottom"/>
+					</div>
+					<button class="addMess-btn" type="submit"><img class="add-btn" src="images/svg.svg" alt="Add" />
+					</button>
 				</div>
 			</form>
 		</div>
@@ -100,7 +115,6 @@
 
 </body>
 <script src="srcJs/login.js"></script>
-<script src="srcJs/api.js"></script>
+<script src="srcJs/jquery-3.3.1.min.js"></script>
 <script src="srcJs/index.js"></script>
-
 </html>

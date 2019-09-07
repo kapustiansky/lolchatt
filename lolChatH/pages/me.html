@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>LolChatt</title>
+	<style>
+		
+	body {
+    	background-color: #121212;
+		margin: 0;
+		text-align: center;
+	}
+
+	.out-cont {
+		position: absolute;
+		top: 2rem;
+		right: 1.5rem;
+	}
+
+	.out-cont-all {
+		position: absolute;
+		top: 4rem;
+		right: 1rem;
+	}
+
+	.out {
+		color: #FF3B48;	
+		cursor: pointer;
+		font-family: 'Titillium Web', sans-serif;
+	}
+
+	.out-all {
+		color: #FF3B48;
+		cursor: pointer;
+		font-family: 'Titillium Web', sans-serif;
+	}
+
+	.cont {
+		padding-top: 14rem;
+	}
+
+	.back {
+		position: absolute;
+		top: 3rem;
+		left: 1rem;
+	}
+
+	.back-btn {
+		color: #FF3B48;
+		cursor: pointer;
+		font-family: 'Titillium Web', sans-serif;
+	}
+
+	.body {
+		display: none;
+	}
+
+	p {
+		color: rgb(255, 255, 255);
+		-famifontly: 'Archivo Black', sans-serif;
+    	font-size: 1.5rem;
+    	font-weight: 800;
+	}
+	</style>
+
+</head>
+
+<body>
+	
+<p>Error! Unregistered User!!!</p>
+<div class="body">
+	<div class="out-cont">
+		<bottom class="out">Out</bottom>
+	</div>
+	<div class="out-cont-all">
+		<bottom class="out-all">Out All</bottom>
+	</div>
+	<div class="back">
+			<a href="https://lolchatt.herokuapp.com" class="back-btn">Back to LOL</a>
+	</div>
+	
+	<div class="cont">
+		<img src="../images/remont.png" alt="remont" class="remont" width="300" height="200"/>
+		<p>Next version under construction...</p>
+	</div>
+</div>
+</body>
+<script>
+(function () {
+
+	'use strict';
+
+	let locStor = JSON.parse(localStorage.getItem('_user'));
+
+	itemsReload();
+
+    function itemsReload() {
+
+		let status = response => {
+				if (response.status == 200) {
+					document.querySelector('.body').style.display = 'block';
+					document.querySelector('p').style.display = 'none';
+					return Promise.resolve(response);
+				} else {
+					document.querySelector('p').style.display = 'block';
+					document.querySelector('.body').style.display = 'none';
+					return Promise.reject(new Error(response.statusText));
+				}
+			}
+        
+        return fetch(`https://lolchatt.herokuapp.com/users/me`, {
+  				headers: {
+					Authorization: `${locStor.token}`
+		  }	
+		})
+		.then(status)
+	}
+
+	document.querySelector('.out').onclick = event => {
+        return fetch('https://lolchatt.herokuapp.com/me/logout', {
+            method: 'POST',
+            headers: {
+                Authorization: `${locStor.token}`}
+		})
+		.then(logOut())
+	}
+
+	document.querySelector('.out-all').onclick = event => {
+        return fetch('https://lolchatt.herokuapp.com/users/me/logoutall', {
+            method: 'POST',
+            headers: {
+                Authorization: `${locStor.token}`}
+		})
+		.then(logOut())
+	}
+
+	function logOut() {
+        localStorage.removeItem('_user');
+        document.querySelector('.back-btn').click();
+	}
+	
+	// let stateObj = { foo: "me" };
+	// history.pushState(stateObj, "page 2", "me");
+	
+})();
+    
+</script>
+
+</html>
